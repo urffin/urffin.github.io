@@ -1,4 +1,4 @@
-!function(){
+(function(){
     function hashVal(val){
         var hashVal = document.querySelector('section span');
         if(!hashVal){
@@ -14,4 +14,4 @@
     });
     
     hashVal(location.hash.substring(1));
-}
+})();
