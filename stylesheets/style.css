@@ -1,5 +1,42 @@
 body{
+    margin: 0;
+    padding: 0;
     font-family: Arial, Times New Roman, sans-serif;
     font-size: 14px;
-    background-color: #fcfdfc
+}
+h1{
+    margin: 0;
+}
+h1, footer{
+    animation: linear color_change 1800s infinite;
+}
+
+footer{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+@keyframes color_change{
+    0% {
+        color: #56ea00;
+        background-color: #000;
+    }
+    25% {
+        color: #ff0000;
+        background-color: #0ff;
+
+    }
+    50%{
+        color:#ffeb3b;
+        background-color:#0014c4;
+    }
+    75%{
+        color: #2300ff;
+        background-color: #dcff00;
+    }
+    100%{
+        color: #56ea00;
+        background-color: #000;
+    }
 }
