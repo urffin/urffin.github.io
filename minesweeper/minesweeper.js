@@ -1,3 +1,32 @@
+function Cell() {
+    this.isOpen = false;
+    this.value = 0;
+    this.hasBomb = false;
+}
+Cell.prototype.trySetBomb = function () {
+    if (!this.hasBomb) {
+        this.hasBomb = 'b';
+        return true;
+    }
+    return false;
+}
+Cell.prototype.incBombAround = function () {
+    if (!this.hasBomb) {
+        this.value += 1;
+    }
+}
+Cell.prototype.renderCell = function ( row, col) {
+    var cell = this;
+    var cellElement = document.createElement('span');
+    cellElement.className = 'cell closed';
+    cellElement.addEventListener('click', function handler() {
+        this.classList.remove('closed');
+        this.classList.add('opened');
+        this.textContent = cell.value;
+        this.removeEventListener('click', handler);
+    });
+    return cellElement;
+}
 function Game(rows, cols, bombs) {
     this.rows = rows;
     this.cols = cols;
@@ -10,7 +39,7 @@ Game.prototype.createCells = function (rows, cols) {
     for (var i = 0; i < rows; i++) {
         cells[i] = [];
         for (var j = 0; j < cols; j++) {
-            cells[i][j] = { isOpen: false, value: 0 };
+            cells[i][j] = new Cell();
         }
     }
     return cells;
@@ -22,7 +51,6 @@ Game.prototype.getRelevant = function* getRelevant(row, col) {
             if (row + i < 0 || row + i >= this.rows ||
                 col + j < 0 || col + j >= this.cols) continue;
 
-            console.log(this.cells, row, i, col, j);
             yield this.cells[row + i][col + j];
         }
 }
@@ -32,32 +60,21 @@ Game.prototype.setBombs = function (bombs) {
         var bombIndex = Math.floor(Math.random() * length);
         var col = bombIndex % this.cols;
         var row = (bombIndex - col) / this.cols;
-        if (this.cells[row][col].value !== 'b') {
+        if (this.cells[row][col].trySetBomb()) {
             bombs--;
-            this.cells[row][col].value = 'b';
             [...this.getRelevant(row, col)].forEach(cell => {
-                if (cell.value !== 'b') cell.value += 1;
+                cell.incBombAround();
             })
         }
     }
 }
-Game.prototype.renderCell = function (cell, row, col) {
-    var cellElement = document.createElement('span');
-    cellElement.className = 'cell closed';
-    cellElement.addEventListener('click', function handler() {
-        this.classList.remove('closed');
-        this.classList.add('opened');
-        this.textContent = cell.value;
-        this.removeEventListener('click', handler);
-    });
-    return cellElement;
-}
+
 Game.prototype.render = function () {
     var board = document.createElement('div');
     board.classList.add('board');
     for (var i = 0; i < this.rows; i++) {
         for (var j = 0; j < this.cols; j++) {
-            board.appendChild(this.renderCell(this.cells[i][j], i, j));
+            board.appendChild(this.cells[i][j].renderCell(i, j));
         }
     }
     return board;
