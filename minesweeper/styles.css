@@ -1,0 +1,19 @@
+.board{
+    margin: auto;
+    width: 400px;
+    height: 400px;
+    border: 1px solid black;
+}
+.cell{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    box-sizing: border-box;
+    vertical-align: bottom;
+    text-align: center;
+    border: 1px solid black;
+
+}
+.closed{
+    background-color: darkgray;
+}
